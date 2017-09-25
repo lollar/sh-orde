@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 # ----------------- COMMAND LINE VARIABLE ASSIGNMENT ----------------- #
 createPath=$1
 if [ -z "${createPath}" ]
@@ -7,7 +7,15 @@ then
   echo "No directory provided. Cloning repos here: ${createPath}"
 fi
 # -------------------------------------------------------------------- #
-
+# --------------------- MAKE SCRIPTS EXECUTABLE ---------------------- #
+executables=( 'uic_greetings_setup' 'uic_stats_setup' 'web_dashboard_setup' 'svc_stats_setup' )
+executablePath='/usr/local/bin/'
+for executable in "${executables[@]}"
+do
+  cp $executable $executablePath
+  chmod a+x $executablePath$executable
+done
+# -------------------------------------------------------------------- #
 # ------------------------ CLONE GIT REPOS --------------------------- #
 cd "$createPath"
 
@@ -19,11 +27,16 @@ do
   echo $repo
 done
 # -------------------------------------------------------------------- #
-
 # -----------------------------UIC STATS------------------------------ #
 osascript \
   -e 'tell application "Terminal"' \
   -e 'tell application "System Events" to keystroke "t" using command down' \
-  -e "do script \"cd ${createPath}/horde-uic-stats\" in front window" \
+  -e "do script \"uic_greetings_setup\" in front window" \
   -e "end tell" > /dev/null
+# -------------------------------------------------------------------- #
+# ------------------------- TEMP CLEAN UP ---------------------------- #
+for executable in "${executables[@]}"
+do
+  rm $executablePath$executable
+done
 # -------------------------------------------------------------------- #
