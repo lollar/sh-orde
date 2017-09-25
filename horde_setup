@@ -23,20 +23,41 @@ githubRepos=( 'horde-uic-greetings' 'horde-web-dashboard' 'horde-svc-stats' 'hor
 
 for repo in "${githubRepos[@]}" 
 do
-  #git clone git@github.com:acima-credit/$repo.git
-  echo $repo
+  git clone git@github.com:acima-credit/$repo.git
 done
 # -------------------------------------------------------------------- #
 # -----------------------------UIC STATS------------------------------ #
+#TODO: REMOVE ALL CHRUBY RELATED COMMANDS!
 osascript \
   -e 'tell application "Terminal"' \
   -e 'tell application "System Events" to keystroke "t" using command down' \
-  -e "do script \"uic_greetings_setup\" in front window" \
+  -e "do script \"cd ${createPath}horde-uic-stats; chruby 2.4.2; uic_stats_setup\" in front window" \
+  -e "end tell" > /dev/null
+# -------------------------------------------------------------------- #
+# -------------------------- UIC GREETINGS --------------------------- #
+osascript \
+  -e 'tell application "Terminal"' \
+  -e 'tell application "System Events" to keystroke "t" using command down' \
+  -e "do script \"cd ${createPath}horde-uic-greetings; chruby 2.4.2; uic_greetings_setup\" in front window" \
+  -e "end tell" > /dev/null
+# -------------------------------------------------------------------- #
+# ----------------------------- SVC STATS ---------------------------- #
+osascript \
+  -e 'tell application "Terminal"' \
+  -e 'tell application "System Events" to keystroke "t" using command down' \
+  -e "do script \"cd ${createPath}horde-svc-stats; svc_stats_setup\" in front window" \
+  -e "end tell" > /dev/null
+# -------------------------------------------------------------------- #
+# --------------------------- WEB DASHBOARD -------------------------- #
+osascript \
+  -e 'tell application "Terminal"' \
+  -e 'tell application "System Events" to keystroke "t" using command down' \
+  -e "do script \"cd ${createPath}horde-web-dashboard; chruby 2.4.2; web_dashboard_setup\" in front window" \
   -e "end tell" > /dev/null
 # -------------------------------------------------------------------- #
 # ------------------------- TEMP CLEAN UP ---------------------------- #
-for executable in "${executables[@]}"
-do
-  rm $executablePath$executable
-done
+#for executable in "${executables[@]}"
+#do
+#  rm $executablePath$executable
+#done
 # -------------------------------------------------------------------- #
