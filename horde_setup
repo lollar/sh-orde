@@ -15,6 +15,15 @@ githubRepos=( 'horde-uic-greetings' 'horde-web-dashboard' 'horde-svc-stats' 'hor
 
 for repo in "${githubRepos[@]}" 
 do
-  git clone git@github.com:acima-credit/$repo.git
+  #git clone git@github.com:acima-credit/$repo.git
+  echo $repo
 done
+# -------------------------------------------------------------------- #
+
+# -----------------------------UIC STATS------------------------------ #
+osascript \
+  -e 'tell application "Terminal"' \
+  -e 'tell application "System Events" to keystroke "t" using command down' \
+  -e "do script \"cd ${createPath}/horde-uic-stats\" in front window" \
+  -e "end tell" > /dev/null
 # -------------------------------------------------------------------- #
