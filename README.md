@@ -10,9 +10,9 @@ chmod a+x /usr/local/bin/horde
 ```
 To setup the project:
 ```
-horde setup ~/directory/for/horde # choose the directory where horde project should live
+horde setup ~/directory/for/horde/ # choose the directory where horde project should live the last `/` is important!
 ```
 To run the project:
 ```
-horde run ~/directory/where/horde/is
+horde run ~/directory/where/horde/is/ # the last `/` is important!
 ```
