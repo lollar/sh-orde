@@ -1,6 +1,0 @@
-#! /bin/sh
-brew install node
-brew install yarn
-yarn install
-yarn start
-

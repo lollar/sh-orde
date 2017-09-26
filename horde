@@ -1,0 +1,89 @@
+#! /bin/sh
+function setup() {
+  if [ -z "${projectPath}" ]
+  then
+    echo "Path to projects no provided! Please provide the path to the horde projects!"
+    exit 1
+  fi
+
+  executable='horde'
+  executablePath='/usr/local/bin/'
+  cp $executable $executablePath
+  chmod a+x $executablePath$executable
+
+
+  cd "$projectPath"
+
+  githubRepos=( 'horde-uic-greetings' 'horde-web-dashboard' 'horde-svc-stats' 'horde-uic-stats' )
+
+  for repo in "${githubRepos[@]}" 
+  do
+    git clone git@github.com:acima-credit/$repo.git
+  done
+
+  run
+}
+
+function run() {
+  run_uic_stats
+  run_uic_greetings
+  run_svc_stats
+  run_web_dashboard
+}
+
+#TODO: REMOVE ALL CHRUBY RELATED COMMANDS!
+function run_uic_stats() {
+  uicStatsSetup="bundle install && rackup -p 9292"
+  osascript \
+    -e 'tell application "Terminal"' \
+    -e 'tell application "System Events" to keystroke "t" using command down' \
+    -e "do script \"cd ${projectPath}horde-uic-stats; chruby 2.4.2; $uicStatsSetup\" in front window" \
+    -e "end tell" > /dev/null
+}
+
+function run_uic_greetings() {
+  greetingsSetup="bundle install && rackup -p 9293"
+  osascript \
+    -e 'tell application "Terminal"' \
+    -e 'tell application "System Events" to keystroke "t" using command down' \
+    -e "do script \"cd ${projectPath}horde-uic-greetings; chruby 2.4.2; $greetingsSetup\" in front window" \
+    -e "end tell" > /dev/null
+}
+function run_svc_stats() {
+  if [ $command = "setup" ]
+  then
+    svcStatsSetup="brew install node && brew install yarn && "
+  fi
+  svcStatsSetup="${svcStatsSetup}yarn install && yarn start"
+
+  osascript \
+    -e 'tell application "Terminal"' \
+    -e 'tell application "System Events" to keystroke "t" using command down' \
+    -e "do script \"cd ${projectPath}horde-svc-stats; $svcStatsSetup\" in front window" \
+    -e "end tell" > /dev/null
+}
+
+function run_web_dashboard() {
+  dashboardSetup="bundle install && bundle exec rails s"
+  osascript \
+    -e 'tell application "Terminal"' \
+    -e 'tell application "System Events" to keystroke "t" using command down' \
+    -e "do script \"cd ${projectPath}horde-web-dashboard; chruby 2.4.2; $dashboardSetup\" in front window" \
+    -e "end tell" > /dev/null
+}
+
+command=$1
+projectPath=$2
+
+if [ $command = "setup" ]
+then
+  echo "Starting setup..."
+  setup
+elif [ $command = "run" ]
+then
+  echo "Running horde..."
+  run
+else
+  echo "Sorry you did not an appropriate command! The supported commands are setup and run."
+  exit 1
+fi
